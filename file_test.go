@@ -43,15 +43,15 @@ func TestWZDataWZ(t *testing.T) {
 	//base.Debug = true
 
 	base.Parse()
-  base.WaitUntilLoaded()
-/*
-	for _, node := range base.Root.Directories {
-		parseDir(node)
-	}
+	base.WaitUntilLoaded()
+	/*
+		for _, node := range base.Root.Directories {
+			parseDir(node)
+		}
 
-	for name, node := range base.Root.Images {
-		fmt.Println("Found image: ", name, ":", node.GetPath())
-		//node.Parse()
-	}
-*/
+		for name, node := range base.Root.Images {
+			fmt.Println("Found image: ", name, ":", node.GetPath())
+			//node.Parse()
+		}
+	*/
 }

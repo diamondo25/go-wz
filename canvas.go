@@ -21,16 +21,15 @@ func NewWZCanvas(name string, parent *WZSimpleNode) *WZCanvas {
 
 func (m *WZCanvas) Parse(file *WZFileBlob, offset int64) {
 	if file.Debug {
-	  m.debug(file, "> WZCanvas::Parse")
-	  defer func() { m.debug(file, "< WZCanvas::Parse") }()
-  }
+		m.debug(file, "> WZCanvas::Parse")
+		defer func() { m.debug(file, "< WZCanvas::Parse") }()
+	}
 	file.skip(1)
 
 	if file.readByte() == 1 {
 		m.Properties = ParseProperty(m.WZSimpleNode, file, offset)
 	}
 
-  /*
 	m.Width = file.readWZInt()
 	m.Height = file.readWZInt()
 
@@ -53,5 +52,4 @@ func (m *WZCanvas) Parse(file *WZFileBlob, offset int64) {
 	file.skip(1)
 
 	m.data = file.readBytes(len)
-	*/
 }

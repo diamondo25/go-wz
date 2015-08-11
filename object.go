@@ -13,7 +13,7 @@ func ParseObject(name string, typename string, parent *WZSimpleNode, file *WZFil
 
 	case "Canvas":
 		canvas := NewWZCanvas(name, parent)
-    canvas.Parse(file, offset)
+		canvas.Parse(file, offset)
 		return canvas
 
 	case "Shape2D#Convex2D":

@@ -27,12 +27,13 @@ func (m *WZVariant) Parse(file *WZFileBlob, offset int64) {
 	m.Type = file.readByte()
 
 	if file.Debug {
-	  m.debug(file, "Type: ", m.Type)
-  }
+		m.debug(file, "Type: ", m.Type)
+	}
 
 	switch m.Type {
 	// no data
 	case 0:
+		m.Value = nil
 		break // Nothing
 
 	// int16
@@ -74,16 +75,15 @@ func (m *WZVariant) Parse(file *WZFileBlob, offset int64) {
 		size := int64(file.readInt32())
 		x := file.pos()
 
-    if file.Debug {
-      m.debug(file, "Size: ", size, " - x: ", x)
-      m.debug(file, "Offset: ", offset)
+		if file.Debug {
+			m.debug(file, "Size: ", size, " - x: ", x)
+			m.debug(file, "Offset: ", offset)
 		}
 		typename := file.readWZObjectUOL(m.GetPath(), offset)
 
-
-	  if file.Debug {
-	    m.debug(file, "typename: ", typename)
-    }
+		if file.Debug {
+			m.debug(file, "typename: ", typename)
+		}
 
 		m.Value = ParseObject(m.Name, typename, m.WZSimpleNode, file, offset)
 

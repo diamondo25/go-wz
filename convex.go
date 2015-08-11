@@ -10,16 +10,16 @@ func ParseConvex(parent *WZSimpleNode, file *WZFileBlob, offset int64) []interfa
 
 	propcount := int(file.readWZInt())
 	if file.Debug {
-	  parent.debug(file, "Object count: ", propcount)
+		parent.debug(file, "Object count: ", propcount)
 	}
 	objects := make([]interface{}, propcount)
 
 	for i := 0; i < propcount; i++ {
 		typename := file.readWZObjectUOL(parent.GetPath(), offset)
 
-	  if file.Debug {
-		  parent.debug(file, "Prop ", i, " has typename ", typename)
-    }
+		if file.Debug {
+			parent.debug(file, "Prop ", i, " has typename ", typename)
+		}
 
 		objects[i] = ParseObject(strconv.Itoa(i), typename, parent, file, offset)
 	}

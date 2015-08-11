@@ -17,7 +17,7 @@ func (m *WZDirectoryLoader) DoWork(workRoutine int) {
 type WZImageLoader struct {
 	Image    *WZImage
 	FileBlob *WZFileBlob
-	Offset    int64
+	Offset   int64
 }
 
 func (m *WZImageLoader) DoWork(workRoutine int) {
@@ -72,11 +72,10 @@ func (m *WZDirectory) Parse(file *WZFileBlob, offset int64) {
 			return
 		}
 
-		/*size := */file.readWZInt() // Blob size
-		file.readWZInt() // Checksum?
+		/*size := */ file.readWZInt() // Blob size
+		file.readWZInt()              // Checksum?
 		dataOffset := int64(file.readWZOffset())
 		curpos := file.pos()
-
 
 		if elementType == 3 {
 
@@ -98,25 +97,30 @@ func (m *WZDirectory) Parse(file *WZFileBlob, offset int64) {
 		} else {
 			img := NewWZImage(name, m.WZSimpleNode)
 			m.Images[name] = img
-			if false {
-				// Goroutine spamming
-				subfile := file.CopySliced(int(dataOffset))
-				img.Parse(subfile, 0)
-			} else if true {
-				// Workpool
-				work := new(WZImageLoader)
-				work.Image = img
-				work.FileBlob = file.Copy()
-				work.Offset = dataOffset
+			if !file.file.LazyLoading {
+				if false {
+					// Goroutine spamming
+					subfile := file.CopySliced(int(dataOffset))
+					img.Parse(subfile, 0)
+				} else if true {
+					// Workpool
+					work := new(WZImageLoader)
+					work.Image = img
+					work.FileBlob = file.Copy()
+					work.Offset = dataOffset
 
-				if err := file.workPool.PostWork("image loader", work); err != nil {
-					fmt.Println("ERROR ", err)
+					if err := file.workPool.PostWork("image loader", work); err != nil {
+						fmt.Println("ERROR ", err)
+					}
+				} else {
+					// Sync loading
+					img.Parse(file, dataOffset)
 				}
 			} else {
-				// Sync loading
-				img.Parse(file, dataOffset)
+				img.parseFuncInfo = func() {
+					img.Parse(file, dataOffset)
+				}
 			}
-
 		}
 		file.seek(curpos)
 	}

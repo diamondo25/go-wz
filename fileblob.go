@@ -159,15 +159,15 @@ func (m *WZFileBlob) readASCIIString(length int32) string {
 
 // Helper functions
 func (m *WZFileBlob) seek(offset int64) {
-  if m.Debug {
-	  m.debug("Seeking ", offset, " bytes (@ ", m.pos(), ")")
+	if m.Debug {
+		m.debug("Seeking ", offset, " bytes (@ ", m.pos(), ")")
 	}
 	newOffset, err := m.reader.Seek(offset, 0)
 	if err != nil {
 		panic(err)
 	}
 	if m.Debug {
-	  m.debug("New offset ", newOffset, " (@ ", m.pos(), ")")
+		m.debug("New offset ", newOffset, " (@ ", m.pos(), ")")
 	}
 }
 
@@ -227,8 +227,8 @@ func (m *WZFileBlob) readDeDuplicatedWZString(uol string, possibleNeededOffset i
 				tmp -= int64(m.readUInt32())
 			}
 			if m.Debug {
-  			m.debug("Reading dedup string at ", tmp)
-  		}
+				m.debug("Reading dedup string at ", tmp)
+			}
 			m.seek(tmp)
 			str = m.readWZString(uol)
 		})
@@ -236,9 +236,9 @@ func (m *WZFileBlob) readDeDuplicatedWZString(uol string, possibleNeededOffset i
 		panic("Unknown deduplicated wz string type: " + strconv.Itoa(int(key)) + " at " + uol + " AT " + strconv.Itoa(int(m.pos())))
 	}
 
-  if m.Debug {
-	  m.debug("Dedupped string for ", uol, ": ", str)
-  }
+	if m.Debug {
+		m.debug("Dedupped string for ", uol, ": ", str)
+	}
 	return str
 }
 
@@ -254,8 +254,8 @@ func (m *WZFileBlob) readWZObjectUOL(uol string, possibleNeededOffset int64) (re
 		m.peekFor(func() {
 			tmp := possibleNeededOffset
 			if m.Debug {
-  			m.debug("Reading wz object uol at ", tmp)
-  		}
+				m.debug("Reading wz object uol at ", tmp)
+			}
 			m.seek(tmp)
 			str = m.readWZString(uol)
 		})
@@ -264,9 +264,9 @@ func (m *WZFileBlob) readWZObjectUOL(uol string, possibleNeededOffset int64) (re
 		panic("Unknown deduplicated wz string type: " + strconv.Itoa(int(key)) + " at " + uol + " AT " + strconv.Itoa(int(m.pos())))
 	}
 
-  if m.Debug {
-	  m.debug("Dedupped string for ", uol, ": ", str)
-  }
+	if m.Debug {
+		m.debug("Dedupped string for ", uol, ": ", str)
+	}
 
 	return str
 }
