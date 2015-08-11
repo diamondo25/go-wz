@@ -154,63 +154,8 @@ func (m *WZFile) WaitUntilLoaded() {
 
 func Fetch(node interface{}, elem string) interface{} {
 	childNodes := GetChildNodes(node)
-	fmt.Println("Fetching ", elem, "; calculated child nodes: ", childNodes)
 	node = childNodes[elem]
 	switch node.(type) {
-	/*
-			case *WZDirectory:
-				dir := node.(*WZDirectory)
-				if strings.HasSuffix(elem, ".img") {
-					node = dir.Images[elem]
-				} else {
-					node = dir.Directories[elem]
-				}
-
-			case WZProperty:
-				prop := node.(WZProperty)
-				println("prop", prop)
-				node = prop[elem]
-
-			case *WZImage:
-				img := node.(*WZImage)
-				println("img", img, img.Name)
-				node = img.Properties[elem]
-
-			case *WZVariant:
-				variant := node.(*WZVariant)
-				println("variant", variant, variant.Type)
-				node = variant.Value
-				if node != nil {
-				println("Variant refetch", node)
-				  node = Fetch(variant.Value, elem)
-		    }
-
-			case *WZCanvas:
-				canvas := node.(*WZCanvas)
-				node = canvas.Properties[elem]
-
-			case *WZVector:
-				vector := node.(*WZVector)
-				if elem == "x" || elem == "X" {
-				  node = vector.X
-				} else if elem == "y" || elem =="Y" {
-				  node = vector.Y
-				} else {
-				  panic("Vector doesn't have " + elem)
-				}
-
-			case []interface{}:
-				number, err := strconv.Atoi(elem)
-				if err != nil {
-					panic(err)
-				}
-				arr := node.([]interface{})
-				node = arr[number]
-
-			default:
-				panic(fmt.Sprint("unknown type ", node))
-	*/
-
 	case *WZVariant:
 		variant := node.(*WZVariant)
 		if variant.Type != 9 {
@@ -247,45 +192,36 @@ func GetChildNodes(node interface{}) map[string]interface{} {
 	switch node.(type) {
 	case *WZDirectory:
 		for name, elem := range node.(*WZDirectory).Directories {
-			println("Adding wzdir element ", name)
 			elements[name] = elem
 		}
 		for name, elem := range node.(*WZDirectory).Images {
-			println("Adding wzdir element ", name)
 			elements[name] = elem
 		}
 	case WZProperty:
 		for name, elem := range node.(WZProperty) {
-			println("Adding wzprop element ", name)
 			elements[name] = elem
 		}
 	case *WZImage:
 		img := node.(*WZImage)
 		img.StartParse()
 		for name, elem := range img.Properties {
-			println("Adding wzimage element ", name)
 			elements[name] = elem
 		}
 	case *WZCanvas:
 		for name, elem := range node.(*WZCanvas).Properties {
-			println("Adding wzcanvas element ", name)
 			elements[name] = elem
 		}
 	case *WZVariant:
 		variant := node.(*WZVariant)
-		println("Node is variant type ", variant.Type)
 		elements = GetChildNodes(variant.Value)
-		println("Unpacked variant")
 
 	case *WZVector:
 		obj := node.(*WZVector)
-		println("Adding wzvector elements")
 		elements["X"] = obj.X
 		elements["Y"] = obj.Y
 
 	case []interface{}:
 		for idx, elem := range node.([]interface{}) {
-			println("Adding interface{} element ", idx)
 			elements[strconv.Itoa(idx)] = elem
 		}
 	default:
@@ -298,9 +234,7 @@ func (m *WZFile) GetFromPath(path string) interface{} {
 	elements := strings.Split(path, "/")
 	var node interface{} = m.Root
 	for _, elem := range elements {
-		fmt.Println("Fetcing elem ", elem)
 		node = Fetch(node, elem)
-		fmt.Println("Elem ", elem, " = ", node)
 	}
 	return node
 }

@@ -1,10 +1,11 @@
 package main
 
 import (
-"bufio"
-"fmt"
-  "github.com/diamondo25/go-wz"
-  "os"
+	"bufio"
+	"flag"
+	"fmt"
+	"github.com/diamondo25/go-wz"
+	"os"
 )
 
 func main() {
@@ -12,20 +13,24 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	//base.Debug = true
+	// base.Debug = true
+	flag.BoolVar(&base.Debug, "debug", false, "Toggles debugging mode")
+	flag.BoolVar(&base.LazyLoading, "lazyloading", true, "If disabled, all data will be loaded in memory")
+	flag.Parse()
 
-  fmt.Println("Loading ", base.Filename)
+	fmt.Println("Loading ", base.Filename)
 	base.Parse()
 
-  base.WaitUntilLoaded()
+	base.WaitUntilLoaded()
 
-  fmt.Println("Loaded!")
+	fmt.Println("Loaded!")
 
-  base.GetFromPath("smap.img")
-  base.GetFromPath("Effect/Tomb.img/fall/0/z")
+	fmt.Println("Smap: ", base.GetFromPath("smap.img"))
+	fmt.Println("Falling tomb thing z value: ", base.GetFromPath("Effect/Tomb.img/fall/0/z"))
+	fmt.Println("Falling tomb thing origin X: ", base.GetFromPath("Effect/Tomb.img/fall/0/origin/X"))
 
-  reader := bufio.NewReader(os.Stdin)
-  reader.ReadString('\n')
+	reader := bufio.NewReader(os.Stdin)
+	reader.ReadString('\n')
 
-  fmt.Println("Shutting Down")
+	fmt.Println("Shutting Down")
 }
