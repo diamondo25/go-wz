@@ -91,22 +91,6 @@ func (m *WZFile) determineVersion() {
 	encryptedVersion := m.mainBlob.readUInt16()
 	var realVersion uint16 = 0
 
-	calculateHash := func(versionNumber uint16) (uint16, uint32) {
-
-		versionAsString := strconv.Itoa(int(versionNumber))
-		b := []byte(versionAsString)
-		// Should return "31 33" on ver 13
-
-		var x uint16 = 0xFF
-		var y uint32 = 0
-		for _, val := range b {
-			x ^= uint16(val + 1) // Lolwat.
-			y = (y << 8) | uint32(val+1)
-		}
-
-		return x, y
-	}
-
 	for {
 		realVersion++
 		calcVersion, calcHash := calculateHash(realVersion)

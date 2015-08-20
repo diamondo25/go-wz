@@ -2,6 +2,7 @@ package wz
 
 import (
 	"crypto/aes"
+	"strconv"
 )
 
 // If a WZ key is configured, it's copied 4 times...
@@ -57,4 +58,24 @@ func rotl(value uint32, times uint8) uint32 {
 // rotr is a Bitshift to the right, that'll put the bits pushed off at the left
 func rotr(value uint32, times uint8) uint32 {
 	return uint32((value >> times) | (value << (32 - times)))
+}
+
+func calculateHash(versionNumber uint16) (uint16, uint32) {
+	versionAsString := strconv.Itoa(int(versionNumber))
+	b := []byte(versionAsString)
+	// Should return "31 33" on ver 13
+
+	var y uint32 = 0
+	for _, val := range b {
+		y = (y << 5)
+		y += uint32(val + 1)
+	}
+
+	var x uint16 = 0xFF
+	x ^= uint16((y >> 24) & 0xFF)
+	x ^= uint16((y >> 16) & 0xFF)
+	x ^= uint16((y >> 8) & 0xFF)
+	x ^= uint16((y >> 0) & 0xFF)
+
+	return x, y
 }

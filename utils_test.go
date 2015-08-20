@@ -29,3 +29,35 @@ func TestAESKey(t *testing.T) {
 		t.Error("Data wasn't equal")
 	}
 }
+
+type TestTuple struct {
+	x uint16
+	y uint32
+}
+
+func TestHashCalculator(t *testing.T) {
+	tests := make(map[uint16]TestTuple)
+	tests[0] = TestTuple{206, 49}
+	tests[1] = TestTuple{205, 50}
+	tests[4] = TestTuple{202, 53}
+	tests[10] = TestTuple{136, 1649}
+	tests[23] = TestTuple{109, 1684}
+	tests[24] = TestTuple{108, 1685}
+	tests[33] = TestTuple{77, 1716}
+
+	var x uint16
+	var y uint32
+	for ver, e := range tests {
+		x, y = calculateHash(ver)
+		if x != e.x {
+			t.Errorf("[%d ; x] %d did not match expected %d", ver, x, e.x)
+		}
+		if y != e.y {
+			t.Errorf("[%d ; y] %d did not match expected %d", ver, y, e.y)
+		}
+
+		if x == e.x && y == e.y {
+			t.Logf("Version %d works fine", ver)
+		}
+	}
+}
