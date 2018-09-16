@@ -61,7 +61,7 @@ func (m *Encryption) setWZVariant(variant byte) {
 
 func (m *Encryption) tryExpandXorKey(length int) {
 	// Check if we already have enough data
-	if len(m.xorKey) < length {
+	if len(m.xorKey) > length {
 		return
 	}
 
